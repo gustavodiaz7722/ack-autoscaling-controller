@@ -804,13 +804,6 @@ func (rm *resourceManager) sdkCreate(
 	ko := desired.ko.DeepCopy()
 
 	rm.setStatusDefaults(ko)
-	// Tags are created with the AutoScalingGroup via the CreateAutoScalingGroup API
-	// No additional tag sync needed - tags are already applied
-	// Set Synced to true since creation is complete
-	if ko.Spec.Tags != nil {
-		ackcondition.SetSynced(&resource{ko}, corev1.ConditionTrue, nil, nil)
-	}
-
 	return &resource{ko}, nil
 }
 
@@ -2016,10 +2009,6 @@ func (rm *resourceManager) sdkDelete(
 	if err != nil {
 		return nil, err
 	}
-	// Always force delete to avoid "ScalingActivityInProgress" errors
-	// This allows deletion even when scaling activities are in progress
-	input.ForceDelete = aws.Bool(true)
-
 	var resp *svcsdk.DeleteAutoScalingGroupOutput
 	_ = resp
 	resp, err = rm.sdkapi.DeleteAutoScalingGroup(ctx, input)
@@ -2037,6 +2026,7 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	if r.ko.Spec.Name != nil {
 		res.AutoScalingGroupName = r.ko.Spec.Name
 	}
+	res.ForceDelete = aws.Bool(true)
 
 	return res, nil
 }
