@@ -1,7 +1,142 @@
 sdk_names:
   model_name: auto-scaling
 
+resources:
+  AutoScalingGroup:
+    fields:
+      Name:
+        is_primary_key: true
+        is_immutable: true
+      # Status fields from DescribeAutoScalingGroups output
+      CreatedTime:
+        is_read_only: true
+        from:
+          operation: DescribeAutoScalingGroups
+          path: AutoScalingGroups.CreatedTime
+      Instances:
+        is_read_only: true
+        from:
+          operation: DescribeAutoScalingGroups
+          path: AutoScalingGroups.Instances
+      EnabledMetrics:
+        is_read_only: true
+        from:
+          operation: DescribeAutoScalingGroups
+          path: AutoScalingGroups.EnabledMetrics
+      SuspendedProcesses:
+        is_read_only: true
+        from:
+          operation: DescribeAutoScalingGroups
+          path: AutoScalingGroups.SuspendedProcesses
+      GroupsStatus:
+        is_read_only: true
+        from:
+          operation: DescribeAutoScalingGroups
+          path: AutoScalingGroups.Status
+      PredictedCapacity:
+        is_read_only: true
+        from:
+          operation: DescribeAutoScalingGroups
+          path: AutoScalingGroups.PredictedCapacity
+      WarmPoolConfiguration:
+        is_read_only: true
+        from:
+          operation: DescribeAutoScalingGroups
+          path: AutoScalingGroups.WarmPoolConfiguration
+      WarmPoolSize:
+        is_read_only: true
+        from:
+          operation: DescribeAutoScalingGroups
+          path: AutoScalingGroups.WarmPoolSize
+      # Fix type_ -> type for TrafficSources
+      TrafficSources.Type:
+        go_tag: json:"type,omitempty"
+      # Cross-resource reference to EC2 Instance
+      InstanceID:
+        references:
+          resource: Instance
+          service_name: ec2
+          path: Status.InstanceID
+      # Cross-resource reference to IAM Role for service-linked role
+      ServiceLinkedRoleARN:
+        references:
+          resource: Role
+          service_name: iam
+          path: Status.ACKResourceMetadata.ARN
+      # Cross-resource reference to IAM Role for lifecycle hooks
+      LifecycleHookSpecificationList.RoleARN:
+        references:
+          resource: Role
+          service_name: iam
+          path: Status.ACKResourceMetadata.ARN
+      # Cross-resource reference to EC2 LaunchTemplate
+      LaunchTemplate.LaunchTemplateID:
+        references:
+          resource: LaunchTemplate
+          service_name: ec2
+          path: Status.ID
+      # Cross-resource reference for MixedInstancesPolicy LaunchTemplate
+      MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID:
+        references:
+          resource: LaunchTemplate
+          service_name: ec2
+          path: Status.ID
+      # Cross-resource reference to ELBv2 TargetGroups
+      TargetGroupARNs:
+        references:
+          resource: TargetGroup
+          service_name: elbv2
+          path: Status.ACKResourceMetadata.ARN
+    renames:
+      operations:
+        CreateAutoScalingGroup:
+          input_fields:
+            AutoScalingGroupName: Name
+        UpdateAutoScalingGroup:
+          input_fields:
+            AutoScalingGroupName: Name
+        DeleteAutoScalingGroup:
+          input_fields:
+            AutoScalingGroupName: Name
+        DescribeAutoScalingGroups:
+          input_fields:
+            AutoScalingGroupNames: Names
+          output_fields:
+            AutoScalingGroupName: Name
+    tags:
+      ignore: false
+    hooks:
+      sdk_create_post_set_output:
+        template_path: hooks/auto_scaling_group/sdk_create_post_set_output.go.tpl
+      sdk_update_pre_build_request:
+        template_path: hooks/auto_scaling_group/sdk_update_pre_build_request.go.tpl
+      sdk_read_many_post_set_output:
+        template_path: hooks/auto_scaling_group/sdk_read_many_post_set_output.go.tpl
+      sdk_delete_post_build_request:
+        template_path: hooks/auto_scaling_group/sdk_delete_post_build_request.go.tpl
+      ensure_tags:
+        template_path: hooks/auto_scaling_group/ensure_tags.go.tpl
+      filter_tags:
+        template_path: hooks/auto_scaling_group/filter_tags.go.tpl
+      sync_tags:
+        template_path: hooks/auto_scaling_group/sync_tags.go.tpl
+      delta_post_compare:
+        template_path: hooks/auto_scaling_group/delta_post_compare.go.tpl
+
 ignore:
   resource_names:
-      - AutoScalingGroup
-      - LaunchConfiguration
+    - LaunchConfiguration
+  field_paths:
+    # remove reserved field
+    - CreateAutoScalingGroupInput.Context
+    # Ignore LaunchTemplateName to avoid ID vs Name conflict.
+    # AWS returns both fields in responses even when only one is specified.
+    # Supporting only LaunchTemplateID avoids reconciliation drift issues and the need for custom code
+    - CreateAutoScalingGroupInput.LaunchTemplate.LaunchTemplateName
+    - UpdateAutoScalingGroupInput.LaunchTemplate.LaunchTemplateName
+    - DescribeAutoScalingGroupsOutput.AutoScalingGroups.LaunchTemplate.LaunchTemplateName
+    - DescribeAutoScalingGroupsOutput.AutoScalingGroups.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName
+    - DescribeAutoScalingGroupsOutput.AutoScalingGroups.MixedInstancesPolicy.LaunchTemplate.Overrides.LaunchTemplateSpecification.LaunchTemplateName
+    # Ignore resourceID and resourceType for tags - these are set automatically by the controller
+    - CreateAutoScalingGroupInput.Tags.ResourceId
+    - CreateAutoScalingGroupInput.Tags.ResourceType
