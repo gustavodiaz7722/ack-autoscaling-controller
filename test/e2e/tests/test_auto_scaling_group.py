@@ -321,7 +321,7 @@ class TestAutoScalingGroup:
         assert deleted
         
         # Poll for AWS deletion to complete (can take time with scaling activities)
-        max_wait_periods = 30  # 30 * 10 seconds = 5 minutes max
+        max_wait_periods = 60  # 30 * 10 seconds = 5 minutes max
         wait_period_length = 10
         
         for attempt in range(max_wait_periods):
