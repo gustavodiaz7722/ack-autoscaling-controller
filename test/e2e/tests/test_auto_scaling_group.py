@@ -202,7 +202,9 @@ class TestAutoScalingGroup:
         cr = k8s.get_resource(ref)
         tags.assert_equal(
             expected=updated_tags,
-            actual=cr["spec"]["tags"]
+            actual=cr["spec"]["tags"],
+            key_member_name='key',
+            value_member_name='value'
         )
         
         # Test 2: Update tag value
@@ -241,7 +243,9 @@ class TestAutoScalingGroup:
         cr = k8s.get_resource(ref)
         tags.assert_equal(
             expected=updated_tags,
-            actual=cr["spec"]["tags"]
+            actual=cr["spec"]["tags"],
+            key_member_name='key',
+            value_member_name='value'
         )
 
         # Test 3: Update propagateAtLaunch value
@@ -359,6 +363,8 @@ class TestAutoScalingGroup:
         tags.assert_equal(
             expected=expected_tags,
             actual=cr["spec"]["tags"],
+            key_member_name='key',
+            value_member_name='value'
         )
 
         # Now set tags to nil (None) - this should delete all user tags

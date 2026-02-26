@@ -625,6 +625,11 @@ func (rm *resourceManager) sdkFind(
 		} else {
 			ko.Spec.ServiceLinkedRoleARN = nil
 		}
+		if elem.Status != nil {
+			ko.Status.Status = elem.Status
+		} else {
+			ko.Status.Status = nil
+		}
 		if elem.SuspendedProcesses != nil {
 			f31 := []*svcapitypes.SuspendedProcess{}
 			for _, f31iter := range elem.SuspendedProcesses {

@@ -503,11 +503,6 @@ func (in *AutoScalingGroupStatus) DeepCopyInto(out *AutoScalingGroupStatus) {
 			}
 		}
 	}
-	if in.GroupsStatus != nil {
-		in, out := &in.GroupsStatus, &out.GroupsStatus
-		*out = new(string)
-		**out = **in
-	}
 	if in.Instances != nil {
 		in, out := &in.Instances, &out.Instances
 		*out = make([]*Instance, len(*in))
@@ -522,6 +517,11 @@ func (in *AutoScalingGroupStatus) DeepCopyInto(out *AutoScalingGroupStatus) {
 	if in.PredictedCapacity != nil {
 		in, out := &in.PredictedCapacity, &out.PredictedCapacity
 		*out = new(int64)
+		**out = **in
+	}
+	if in.Status != nil {
+		in, out := &in.Status, &out.Status
+		*out = new(string)
 		**out = **in
 	}
 	if in.SuspendedProcesses != nil {

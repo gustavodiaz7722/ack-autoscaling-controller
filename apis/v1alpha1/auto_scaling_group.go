@@ -290,18 +290,18 @@ type AutoScalingGroupStatus struct {
 	// The metrics enabled for the group.
 	// +kubebuilder:validation:Optional
 	EnabledMetrics []*EnabledMetric `json:"enabledMetrics,omitempty"`
-	// The current state of the group when the DeleteAutoScalingGroup (https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DeleteAutoScalingGroup.html)
-	// operation is in progress.
-	//
-	// Regex Pattern: `^[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*$`
-	// +kubebuilder:validation:Optional
-	GroupsStatus *string `json:"groupsStatus,omitempty"`
 	// The EC2 instances associated with the group.
 	// +kubebuilder:validation:Optional
 	Instances []*Instance `json:"instances,omitempty"`
 	// The predicted capacity of the group when it has a predictive scaling policy.
 	// +kubebuilder:validation:Optional
 	PredictedCapacity *int64 `json:"predictedCapacity,omitempty"`
+	// The current state of the group when the DeleteAutoScalingGroup (https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DeleteAutoScalingGroup.html)
+	// operation is in progress.
+	//
+	// Regex Pattern: `^[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*$`
+	// +kubebuilder:validation:Optional
+	Status *string `json:"status,omitempty"`
 	// The suspended processes associated with the group.
 	// +kubebuilder:validation:Optional
 	SuspendedProcesses []*SuspendedProcess `json:"suspendedProcesses,omitempty"`

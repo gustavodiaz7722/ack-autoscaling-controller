@@ -921,13 +921,6 @@ spec:
                       type: string
                   type: object
                 type: array
-              groupsStatus:
-                description: |-
-                  The current state of the group when the DeleteAutoScalingGroup (https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DeleteAutoScalingGroup.html)
-                  operation is in progress.
-
-                  Regex Pattern: `^[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*$`
-                type: string
               instances:
                 description: The EC2 instances associated with the group.
                 items:
@@ -970,6 +963,13 @@ spec:
                   scaling policy.
                 format: int64
                 type: integer
+              status:
+                description: |-
+                  The current state of the group when the DeleteAutoScalingGroup (https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DeleteAutoScalingGroup.html)
+                  operation is in progress.
+
+                  Regex Pattern: `^[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*$`
+                type: string
               suspendedProcesses:
                 description: The suspended processes associated with the group.
                 items:
