@@ -36,14 +36,8 @@ import (
 // +kubebuilder:rbac:groups=ec2.services.k8s.aws,resources=instances,verbs=get;list
 // +kubebuilder:rbac:groups=ec2.services.k8s.aws,resources=instances/status,verbs=get;list
 
-// +kubebuilder:rbac:groups=ec2.services.k8s.aws,resources=launchtemplates,verbs=get;list
-// +kubebuilder:rbac:groups=ec2.services.k8s.aws,resources=launchtemplates/status,verbs=get;list
-
 // +kubebuilder:rbac:groups=iam.services.k8s.aws,resources=roles,verbs=get;list
 // +kubebuilder:rbac:groups=iam.services.k8s.aws,resources=roles/status,verbs=get;list
-
-// +kubebuilder:rbac:groups=ec2.services.k8s.aws,resources=launchtemplates,verbs=get;list
-// +kubebuilder:rbac:groups=ec2.services.k8s.aws,resources=launchtemplates/status,verbs=get;list
 
 // +kubebuilder:rbac:groups=iam.services.k8s.aws,resources=roles,verbs=get;list
 // +kubebuilder:rbac:groups=iam.services.k8s.aws,resources=roles/status,verbs=get;list
@@ -62,25 +56,9 @@ func (rm *resourceManager) ClearResolvedReferences(res acktypes.AWSResource) ack
 		ko.Spec.InstanceID = nil
 	}
 
-	if ko.Spec.LaunchTemplate != nil {
-		if ko.Spec.LaunchTemplate.LaunchTemplateRef != nil {
-			ko.Spec.LaunchTemplate.LaunchTemplateID = nil
-		}
-	}
-
 	for f0idx, f0iter := range ko.Spec.LifecycleHookSpecificationList {
 		if f0iter.RoleRef != nil {
 			ko.Spec.LifecycleHookSpecificationList[f0idx].RoleARN = nil
-		}
-	}
-
-	if ko.Spec.MixedInstancesPolicy != nil {
-		if ko.Spec.MixedInstancesPolicy.LaunchTemplate != nil {
-			if ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification != nil {
-				if ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateRef != nil {
-					ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID = nil
-				}
-			}
 		}
 	}
 
@@ -117,19 +95,7 @@ func (rm *resourceManager) ResolveReferences(
 		resourceHasReferences = resourceHasReferences || fieldHasReferences
 	}
 
-	if fieldHasReferences, err := rm.resolveReferenceForLaunchTemplate_LaunchTemplateID(ctx, apiReader, ko); err != nil {
-		return &resource{ko}, (resourceHasReferences || fieldHasReferences), err
-	} else {
-		resourceHasReferences = resourceHasReferences || fieldHasReferences
-	}
-
 	if fieldHasReferences, err := rm.resolveReferenceForLifecycleHookSpecificationList_RoleARN(ctx, apiReader, ko); err != nil {
-		return &resource{ko}, (resourceHasReferences || fieldHasReferences), err
-	} else {
-		resourceHasReferences = resourceHasReferences || fieldHasReferences
-	}
-
-	if fieldHasReferences, err := rm.resolveReferenceForMixedInstancesPolicy_LaunchTemplate_LaunchTemplateSpecification_LaunchTemplateID(ctx, apiReader, ko); err != nil {
 		return &resource{ko}, (resourceHasReferences || fieldHasReferences), err
 	} else {
 		resourceHasReferences = resourceHasReferences || fieldHasReferences
@@ -158,25 +124,9 @@ func validateReferenceFields(ko *svcapitypes.AutoScalingGroup) error {
 		return ackerr.ResourceReferenceAndIDNotSupportedFor("InstanceID", "InstanceRef")
 	}
 
-	if ko.Spec.LaunchTemplate != nil {
-		if ko.Spec.LaunchTemplate.LaunchTemplateRef != nil && ko.Spec.LaunchTemplate.LaunchTemplateID != nil {
-			return ackerr.ResourceReferenceAndIDNotSupportedFor("LaunchTemplate.LaunchTemplateID", "LaunchTemplate.LaunchTemplateRef")
-		}
-	}
-
 	for _, f0iter := range ko.Spec.LifecycleHookSpecificationList {
 		if f0iter.RoleRef != nil && f0iter.RoleARN != nil {
 			return ackerr.ResourceReferenceAndIDNotSupportedFor("LifecycleHookSpecificationList.RoleARN", "LifecycleHookSpecificationList.RoleRef")
-		}
-	}
-
-	if ko.Spec.MixedInstancesPolicy != nil {
-		if ko.Spec.MixedInstancesPolicy.LaunchTemplate != nil {
-			if ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification != nil {
-				if ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateRef != nil && ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID != nil {
-					return ackerr.ResourceReferenceAndIDNotSupportedFor("MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID", "MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateRef")
-				}
-			}
 		}
 	}
 
@@ -273,91 +223,6 @@ func getReferencedResourceState_Instance(
 	return nil
 }
 
-// resolveReferenceForLaunchTemplate_LaunchTemplateID reads the resource referenced
-// from LaunchTemplate.LaunchTemplateRef field and sets the LaunchTemplate.LaunchTemplateID
-// from referenced resource. Returns a boolean indicating whether a reference
-// contains references, or an error
-func (rm *resourceManager) resolveReferenceForLaunchTemplate_LaunchTemplateID(
-	ctx context.Context,
-	apiReader client.Reader,
-	ko *svcapitypes.AutoScalingGroup,
-) (hasReferences bool, err error) {
-	if ko.Spec.LaunchTemplate != nil {
-		if ko.Spec.LaunchTemplate.LaunchTemplateRef != nil && ko.Spec.LaunchTemplate.LaunchTemplateRef.From != nil {
-			hasReferences = true
-			arr := ko.Spec.LaunchTemplate.LaunchTemplateRef.From
-			if arr.Name == nil || *arr.Name == "" {
-				return hasReferences, fmt.Errorf("provided resource reference is nil or empty: LaunchTemplate.LaunchTemplateRef")
-			}
-			namespace := ko.ObjectMeta.GetNamespace()
-			if arr.Namespace != nil && *arr.Namespace != "" {
-				namespace = *arr.Namespace
-			}
-			obj := &ec2apitypes.LaunchTemplate{}
-			if err := getReferencedResourceState_LaunchTemplate(ctx, apiReader, obj, *arr.Name, namespace); err != nil {
-				return hasReferences, err
-			}
-			ko.Spec.LaunchTemplate.LaunchTemplateID = (*string)(obj.Status.ID)
-		}
-	}
-
-	return hasReferences, nil
-}
-
-// getReferencedResourceState_LaunchTemplate looks up whether a referenced resource
-// exists and is in a ACK.ResourceSynced=True state. If the referenced resource does exist and is
-// in a Synced state, returns nil, otherwise returns `ackerr.ResourceReferenceTerminalFor` or
-// `ResourceReferenceNotSyncedFor` depending on if the resource is in a Terminal state.
-func getReferencedResourceState_LaunchTemplate(
-	ctx context.Context,
-	apiReader client.Reader,
-	obj *ec2apitypes.LaunchTemplate,
-	name string, // the Kubernetes name of the referenced resource
-	namespace string, // the Kubernetes namespace of the referenced resource
-) error {
-	namespacedName := types.NamespacedName{
-		Namespace: namespace,
-		Name:      name,
-	}
-	err := apiReader.Get(ctx, namespacedName, obj)
-	if err != nil {
-		return err
-	}
-	var refResourceTerminal bool
-	for _, cond := range obj.Status.Conditions {
-		if cond.Type == ackv1alpha1.ConditionTypeTerminal &&
-			cond.Status == corev1.ConditionTrue {
-			return ackerr.ResourceReferenceTerminalFor(
-				"LaunchTemplate",
-				namespace, name)
-		}
-	}
-	if refResourceTerminal {
-		return ackerr.ResourceReferenceTerminalFor(
-			"LaunchTemplate",
-			namespace, name)
-	}
-	var refResourceSynced bool
-	for _, cond := range obj.Status.Conditions {
-		if cond.Type == ackv1alpha1.ConditionTypeResourceSynced &&
-			cond.Status == corev1.ConditionTrue {
-			refResourceSynced = true
-		}
-	}
-	if !refResourceSynced {
-		return ackerr.ResourceReferenceNotSyncedFor(
-			"LaunchTemplate",
-			namespace, name)
-	}
-	if obj.Status.ID == nil {
-		return ackerr.ResourceReferenceMissingTargetFieldFor(
-			"LaunchTemplate",
-			namespace, name,
-			"Status.ID")
-	}
-	return nil
-}
-
 // resolveReferenceForLifecycleHookSpecificationList_RoleARN reads the resource referenced
 // from LifecycleHookSpecificationList.RoleRef field and sets the LifecycleHookSpecificationList.RoleARN
 // from referenced resource. Returns a boolean indicating whether a reference
@@ -441,41 +306,6 @@ func getReferencedResourceState_Role(
 			"Status.ACKResourceMetadata.ARN")
 	}
 	return nil
-}
-
-// resolveReferenceForMixedInstancesPolicy_LaunchTemplate_LaunchTemplateSpecification_LaunchTemplateID reads the resource referenced
-// from MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateRef field and sets the MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID
-// from referenced resource. Returns a boolean indicating whether a reference
-// contains references, or an error
-func (rm *resourceManager) resolveReferenceForMixedInstancesPolicy_LaunchTemplate_LaunchTemplateSpecification_LaunchTemplateID(
-	ctx context.Context,
-	apiReader client.Reader,
-	ko *svcapitypes.AutoScalingGroup,
-) (hasReferences bool, err error) {
-	if ko.Spec.MixedInstancesPolicy != nil {
-		if ko.Spec.MixedInstancesPolicy.LaunchTemplate != nil {
-			if ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification != nil {
-				if ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateRef != nil && ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateRef.From != nil {
-					hasReferences = true
-					arr := ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateRef.From
-					if arr.Name == nil || *arr.Name == "" {
-						return hasReferences, fmt.Errorf("provided resource reference is nil or empty: MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateRef")
-					}
-					namespace := ko.ObjectMeta.GetNamespace()
-					if arr.Namespace != nil && *arr.Namespace != "" {
-						namespace = *arr.Namespace
-					}
-					obj := &ec2apitypes.LaunchTemplate{}
-					if err := getReferencedResourceState_LaunchTemplate(ctx, apiReader, obj, *arr.Name, namespace); err != nil {
-						return hasReferences, err
-					}
-					ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID = (*string)(obj.Status.ID)
-				}
-			}
-		}
-	}
-
-	return hasReferences, nil
 }
 
 // resolveReferenceForServiceLinkedRoleARN reads the resource referenced

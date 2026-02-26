@@ -94,8 +94,6 @@ rules:
   resources:
   - instances
   - instances/status
-  - launchtemplates
-  - launchtemplates/status
   verbs:
   - get
   - list

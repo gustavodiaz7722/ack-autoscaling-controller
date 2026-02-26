@@ -76,18 +76,20 @@ resources:
           resource: Role
           service_name: iam
           path: Status.ACKResourceMetadata.ARN
-      # Cross-resource reference to EC2 LaunchTemplate
-      LaunchTemplate.LaunchTemplateID:
-        references:
-          resource: LaunchTemplate
-          service_name: ec2
-          path: Status.ID
-      # Cross-resource reference for MixedInstancesPolicy LaunchTemplate
-      MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID:
-        references:
-          resource: LaunchTemplate
-          service_name: ec2
-          path: Status.ID
+      # TODO: Enable LaunchTemplate references once known issue with code generator is fixed
+      # bug is discussed in PR https://github.com/aws-controllers-k8s/autoscaling-controller/pull/3
+      # # Cross-resource reference to EC2 LaunchTemplate
+      # LaunchTemplate.LaunchTemplateID:
+      #   references:
+      #     resource: LaunchTemplate
+      #     service_name: ec2
+      #     path: Status.ID
+      # # Cross-resource reference for MixedInstancesPolicy LaunchTemplate
+      # MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID:
+      #   references:
+      #     resource: LaunchTemplate
+      #     service_name: ec2
+      #     path: Status.ID
       # Cross-resource reference to ELBv2 TargetGroups
       TargetGroupARNs:
         references:

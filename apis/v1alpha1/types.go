@@ -546,9 +546,7 @@ type LaunchTemplateOverrides struct {
 // in the Amazon EC2 Auto Scaling User Guide.
 type LaunchTemplateSpecification struct {
 	LaunchTemplateID *string `json:"launchTemplateID,omitempty"`
-	// Reference field for LaunchTemplateID
-	LaunchTemplateRef *ackv1alpha1.AWSResourceReferenceWrapper `json:"launchTemplateRef,omitempty"`
-	Version           *string                                  `json:"version,omitempty"`
+	Version          *string `json:"version,omitempty"`
 }
 
 // Describes a lifecycle hook. A lifecycle hook lets you create solutions that

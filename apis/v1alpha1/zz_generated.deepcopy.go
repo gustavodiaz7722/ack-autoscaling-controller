@@ -1833,11 +1833,6 @@ func (in *LaunchTemplateSpecification) DeepCopyInto(out *LaunchTemplateSpecifica
 		*out = new(string)
 		**out = **in
 	}
-	if in.LaunchTemplateRef != nil {
-		in, out := &in.LaunchTemplateRef, &out.LaunchTemplateRef
-		*out = new(corev1alpha1.AWSResourceReferenceWrapper)
-		(*in).DeepCopyInto(*out)
-	}
 	if in.Version != nil {
 		in, out := &in.Version, &out.Version
 		*out = new(string)

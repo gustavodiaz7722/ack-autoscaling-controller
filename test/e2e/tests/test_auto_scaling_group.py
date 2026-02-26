@@ -198,6 +198,13 @@ class TestAutoScalingGroup:
             actual=latest_tags,
         )
         
+        # Verify k8s resource tags don't contain system tags
+        cr = k8s.get_resource(ref)
+        tags.assert_equal(
+            expected=updated_tags,
+            actual=cr["spec"]["tags"]
+        )
+        
         # Test 2: Update tag value
         updates = {
             "spec": {
@@ -228,6 +235,13 @@ class TestAutoScalingGroup:
         tags.assert_equal_without_ack_tags(
             expected=updated_tags,
             actual=latest_tags,
+        )
+
+        # Verify k8s resource tags don't contain system tags
+        cr = k8s.get_resource(ref)
+        tags.assert_equal(
+            expected=updated_tags,
+            actual=cr["spec"]["tags"]
         )
 
         # Test 3: Update propagateAtLaunch value
@@ -284,6 +298,10 @@ class TestAutoScalingGroup:
             expected=updated_tags,
             actual=latest_tags,
         )
+        
+        # Verify k8s resource tags are nil/empty
+        cr = k8s.get_resource(ref)
+        assert cr["spec"].get("tags") is None or cr["spec"].get("tags") == []
 
     def test_tags_set_to_nil(self, autoscaling_client, simple_auto_scaling_group):
         """Test that setting tags to nil (None) deletes all user tags from AWS."""
@@ -336,6 +354,13 @@ class TestAutoScalingGroup:
             actual=latest_tags,
         )
 
+        # Verify k8s resource tags don't contain system tags
+        cr = k8s.get_resource(ref)
+        tags.assert_equal(
+            expected=expected_tags,
+            actual=cr["spec"]["tags"],
+        )
+
         # Now set tags to nil (None) - this should delete all user tags
         updates = {
             "spec": {
@@ -361,6 +386,10 @@ class TestAutoScalingGroup:
             expected={},
             actual=latest_tags,
         )
+
+        # Verify k8s resource tags are nil/empty
+        cr = k8s.get_resource(ref)
+        assert cr["spec"].get("tags") is None or cr["spec"].get("tags") == []
 
     def test_delete(self, autoscaling_client):
         """Test that deleting the K8s resource deletes the AWS AutoScalingGroup."""
