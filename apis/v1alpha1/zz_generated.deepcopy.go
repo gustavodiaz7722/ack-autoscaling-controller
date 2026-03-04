@@ -397,6 +397,22 @@ func (in *AutoScalingGroupSpec) DeepCopyInto(out *AutoScalingGroupSpec) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.TagPropagateAtLaunch != nil {
+		in, out := &in.TagPropagateAtLaunch, &out.TagPropagateAtLaunch
+		*out = make(map[string]*bool, len(*in))
+		for key, val := range *in {
+			var outVal *bool
+			if val == nil {
+				(*out)[key] = nil
+			} else {
+				inVal := (*in)[key]
+				in, out := &inVal, &outVal
+				*out = new(bool)
+				**out = **in
+			}
+			(*out)[key] = outVal
+		}
+	}
 	if in.Tags != nil {
 		in, out := &in.Tags, &out.Tags
 		*out = make([]*Tag, len(*in))
@@ -2502,21 +2518,6 @@ func (in *Tag) DeepCopyInto(out *Tag) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.PropagateAtLaunch != nil {
-		in, out := &in.PropagateAtLaunch, &out.PropagateAtLaunch
-		*out = new(bool)
-		**out = **in
-	}
-	if in.ResourceID != nil {
-		in, out := &in.ResourceID, &out.ResourceID
-		*out = new(string)
-		**out = **in
-	}
-	if in.ResourceType != nil {
-		in, out := &in.ResourceType, &out.ResourceType
-		*out = new(string)
-		**out = **in
-	}
 	if in.Value != nil {
 		in, out := &in.Value, &out.Value
 		*out = new(string)
@@ -2539,21 +2540,6 @@ func (in *TagDescription) DeepCopyInto(out *TagDescription) {
 	*out = *in
 	if in.Key != nil {
 		in, out := &in.Key, &out.Key
-		*out = new(string)
-		**out = **in
-	}
-	if in.PropagateAtLaunch != nil {
-		in, out := &in.PropagateAtLaunch, &out.PropagateAtLaunch
-		*out = new(bool)
-		**out = **in
-	}
-	if in.ResourceID != nil {
-		in, out := &in.ResourceID, &out.ResourceID
-		*out = new(string)
-		**out = **in
-	}
-	if in.ResourceType != nil {
-		in, out := &in.ResourceType, &out.ResourceType
 		*out = new(string)
 		**out = **in
 	}

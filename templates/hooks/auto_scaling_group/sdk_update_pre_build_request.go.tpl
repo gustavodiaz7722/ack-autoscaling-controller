@@ -1,11 +1,19 @@
+	desired.SetStatus(latest)
+
 	if delta.DifferentAt("Spec.Tags") {
-		err := rm.syncTags(
+		name := string(*latest.ko.Spec.Name)
+		err = syncTags(
 			ctx,
-			latest,
-			desired,
+			desired.ko.Spec.Tags,
+			desired.ko.Spec.TagPropagateAtLaunch,
+			latest.ko.Spec.Tags,
+			latest.ko.Spec.TagPropagateAtLaunch,
+			name,
+			rm.sdkapi,
+			rm.metrics,
 		)
 		if err != nil {
-			return nil, err
+			return desired, err
 		}
 	}
 	if !delta.DifferentExcept("Spec.Tags") {

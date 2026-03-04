@@ -653,15 +653,6 @@ func (rm *resourceManager) sdkFind(
 				if f32iter.Key != nil {
 					f32elem.Key = f32iter.Key
 				}
-				if f32iter.PropagateAtLaunch != nil {
-					f32elem.PropagateAtLaunch = f32iter.PropagateAtLaunch
-				}
-				if f32iter.ResourceId != nil {
-					f32elem.ResourceID = f32iter.ResourceId
-				}
-				if f32iter.ResourceType != nil {
-					f32elem.ResourceType = f32iter.ResourceType
-				}
 				if f32iter.Value != nil {
 					f32elem.Value = f32iter.Value
 				}
@@ -743,12 +734,24 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
-	if ko.Spec.Name != nil {
-		tags, err := rm.getTags(ctx, *ko.Spec.Name)
-		if err != nil {
-			return nil, err
+	// Build the TagPropagateAtLaunch map from the raw API response.
+	// DescribeAutoScalingGroups returns TagDescription objects with
+	// PropagateAtLaunch, but the generated code only copies Key/Value
+	// into Spec.Tags. This hook extracts PropagateAtLaunch into the
+	// separate TagPropagateAtLaunch map so delta comparison is accurate.
+	for _, asg := range resp.AutoScalingGroups {
+		if asg.AutoScalingGroupName != nil && ko.Spec.Name != nil && *asg.AutoScalingGroupName == *ko.Spec.Name {
+			if len(asg.Tags) > 0 {
+				palMap := make(map[string]*bool, len(asg.Tags))
+				for _, t := range asg.Tags {
+					if t.Key != nil && t.PropagateAtLaunch != nil {
+						palMap[*t.Key] = t.PropagateAtLaunch
+					}
+				}
+				ko.Spec.TagPropagateAtLaunch = palMap
+			}
+			break
 		}
-		ko.Spec.Tags = tags
 	}
 
 	return &resource{ko}, nil
@@ -809,6 +812,9 @@ func (rm *resourceManager) sdkCreate(
 	ko := desired.ko.DeepCopy()
 
 	rm.setStatusDefaults(ko)
+	if ko.Spec.Tags != nil {
+		ackcondition.SetSynced(&resource{ko}, corev1.ConditionFalse, nil, nil)
+	}
 	return &resource{ko}, nil
 }
 
@@ -1372,29 +1378,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.SkipZonalShiftValidation != nil {
 		res.SkipZonalShiftValidation = r.ko.Spec.SkipZonalShiftValidation
 	}
-	if r.ko.Spec.Tags != nil {
-		f27 := []svcsdktypes.Tag{}
-		for _, f27iter := range r.ko.Spec.Tags {
-			f27elem := &svcsdktypes.Tag{}
-			if f27iter.Key != nil {
-				f27elem.Key = f27iter.Key
-			}
-			if f27iter.PropagateAtLaunch != nil {
-				f27elem.PropagateAtLaunch = f27iter.PropagateAtLaunch
-			}
-			if f27iter.ResourceID != nil {
-				f27elem.ResourceId = f27iter.ResourceID
-			}
-			if f27iter.ResourceType != nil {
-				f27elem.ResourceType = f27iter.ResourceType
-			}
-			if f27iter.Value != nil {
-				f27elem.Value = f27iter.Value
-			}
-			f27 = append(f27, *f27elem)
-		}
-		res.Tags = f27
-	}
 	if r.ko.Spec.TargetGroupARNs != nil {
 		res.TargetGroupARNs = aws.ToStringSlice(r.ko.Spec.TargetGroupARNs)
 	}
@@ -1435,14 +1418,22 @@ func (rm *resourceManager) sdkUpdate(
 	defer func() {
 		exit(err)
 	}()
+	desired.SetStatus(latest)
+
 	if delta.DifferentAt("Spec.Tags") {
-		err := rm.syncTags(
+		name := string(*latest.ko.Spec.Name)
+		err = syncTags(
 			ctx,
-			latest,
-			desired,
+			desired.ko.Spec.Tags,
+			desired.ko.Spec.TagPropagateAtLaunch,
+			latest.ko.Spec.Tags,
+			latest.ko.Spec.TagPropagateAtLaunch,
+			name,
+			rm.sdkapi,
+			rm.metrics,
 		)
 		if err != nil {
-			return nil, err
+			return desired, err
 		}
 	}
 	if !delta.DifferentExcept("Spec.Tags") {

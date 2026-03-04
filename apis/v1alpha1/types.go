@@ -759,20 +759,14 @@ type SuspendedProcess struct {
 
 // Describes a tag for an Auto Scaling group.
 type Tag struct {
-	Key               *string `json:"key,omitempty"`
-	PropagateAtLaunch *bool   `json:"propagateAtLaunch,omitempty"`
-	ResourceID        *string `json:"resourceID,omitempty"`
-	ResourceType      *string `json:"resourceType,omitempty"`
-	Value             *string `json:"value,omitempty"`
+	Key   *string `json:"key,omitempty"`
+	Value *string `json:"value,omitempty"`
 }
 
 // Describes a tag for an Auto Scaling group.
 type TagDescription struct {
-	Key               *string `json:"key,omitempty"`
-	PropagateAtLaunch *bool   `json:"propagateAtLaunch,omitempty"`
-	ResourceID        *string `json:"resourceID,omitempty"`
-	ResourceType      *string `json:"resourceType,omitempty"`
-	Value             *string `json:"value,omitempty"`
+	Key   *string `json:"key,omitempty"`
+	Value *string `json:"value,omitempty"`
 }
 
 // Specifies the minimum and maximum for the TotalLocalStorageGB object when

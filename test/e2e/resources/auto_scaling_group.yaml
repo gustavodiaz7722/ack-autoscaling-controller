@@ -17,7 +17,8 @@ spec:
   tags:
     - key: Name
       value: $ASG_NAME
-      propagateAtLaunch: true
     - key: ManagedBy
       value: ACK
-      propagateAtLaunch: false
+  tagPropagateAtLaunch:
+    Name: true
+    ManagedBy: false

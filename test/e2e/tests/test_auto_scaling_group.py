@@ -173,9 +173,11 @@ class TestAutoScalingGroup:
                     {
                         "key": "new-tag-key",
                         "value": "new-tag-value-1",
-                        "propagateAtLaunch": True
                     }
-                ]
+                ],
+                "tagPropagateAtLaunch": {
+                    "new-tag-key": True
+                }
             }
         }
         
@@ -214,9 +216,11 @@ class TestAutoScalingGroup:
                     {
                         "key": "new-tag-key",
                         "value": "new-tag-value-2",
-                        "propagateAtLaunch": True
                     }
-                ]
+                ],
+                "tagPropagateAtLaunch": {
+                    "new-tag-key": True
+                }
             }
         }
         
@@ -255,9 +259,11 @@ class TestAutoScalingGroup:
                     {
                         "key": "new-tag-key",
                         "value": "new-tag-value-2",
-                        "propagateAtLaunch": False
                     }
-                ]
+                ],
+                "tagPropagateAtLaunch": {
+                    "new-tag-key": False
+                }
             }
         }
         
@@ -324,14 +330,16 @@ class TestAutoScalingGroup:
                     {
                         "key": "test-nil-tag-1",
                         "value": "value-1",
-                        "propagateAtLaunch": True
                     },
                     {
                         "key": "test-nil-tag-2",
                         "value": "value-2",
-                        "propagateAtLaunch": False
                     }
-                ]
+                ],
+                "tagPropagateAtLaunch": {
+                    "test-nil-tag-1": True,
+                    "test-nil-tag-2": False
+                }
             }
         }
 
