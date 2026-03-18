@@ -100,6 +100,8 @@ resources:
     exceptions:
       terminal_codes:
         - ValidationError
+        - AlreadyExists
+        - LimitExceeded
     renames:
       operations:
         CreateAutoScalingGroup:
@@ -128,14 +130,14 @@ ignore:
   field_paths:
     # remove reserved field
     - CreateAutoScalingGroupInput.Context
-    # Ignore LaunchTemplateName to avoid ID vs Name conflict.
+    # Ignore LaunchTemplateId to avoid ID vs Name conflict.
     # AWS returns both fields in responses even when only one is specified.
-    # Supporting only LaunchTemplateID avoids reconciliation drift issues and the need for custom code
-    - CreateAutoScalingGroupInput.LaunchTemplate.LaunchTemplateName
-    - UpdateAutoScalingGroupInput.LaunchTemplate.LaunchTemplateName
-    - DescribeAutoScalingGroupsOutput.AutoScalingGroups.LaunchTemplate.LaunchTemplateName
-    - DescribeAutoScalingGroupsOutput.AutoScalingGroups.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName
-    - DescribeAutoScalingGroupsOutput.AutoScalingGroups.MixedInstancesPolicy.LaunchTemplate.Overrides.LaunchTemplateSpecification.LaunchTemplateName
+    # Supporting only LaunchTemplateName avoids reconciliation drift issues and the need for custom code
+    - CreateAutoScalingGroupInput.LaunchTemplate.LaunchTemplateId
+    - UpdateAutoScalingGroupInput.LaunchTemplate.LaunchTemplateId
+    - DescribeAutoScalingGroupsOutput.AutoScalingGroups.LaunchTemplate.LaunchTemplateId
+    - DescribeAutoScalingGroupsOutput.AutoScalingGroups.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateId
+    - DescribeAutoScalingGroupsOutput.AutoScalingGroups.MixedInstancesPolicy.LaunchTemplate.Overrides.LaunchTemplateSpecification.LaunchTemplateId
     # Only keep Key and Value for tags - remove PropagateAtLaunch, ResourceId, ResourceType
     # Target the shared Tag and TagDescription shapes directly so fields are
     # removed from both the generated Go types and the CRD schema

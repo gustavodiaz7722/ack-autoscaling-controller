@@ -21,7 +21,7 @@ def get_replacement_values():
     try:
         resources = get_bootstrap_resources()
         return {
-            "LAUNCH_TEMPLATE_ID": resources.LaunchTemplateID,
+            "LAUNCH_TEMPLATE_NAME": resources.LaunchTemplateName,
             "LAUNCH_TEMPLATE_VERSION": "$Latest",
             "AVAILABILITY_ZONE_1": resources.AvailabilityZone1,
             "VPC_ZONE_IDENTIFIER": resources.VPCZoneIdentifier,
@@ -29,7 +29,7 @@ def get_replacement_values():
     except:
         # Fallback values if bootstrap hasn't run
         return {
-            "LAUNCH_TEMPLATE_ID": "",
+            "LAUNCH_TEMPLATE_NAME": "",
             "LAUNCH_TEMPLATE_VERSION": "$Latest",
             "AVAILABILITY_ZONE_1": "us-west-2a",
             "VPC_ZONE_IDENTIFIER": "",

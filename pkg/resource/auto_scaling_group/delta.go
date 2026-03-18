@@ -209,11 +209,11 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.LaunchTemplate, b.ko.Spec.LaunchTemplate) {
 		delta.Add("Spec.LaunchTemplate", a.ko.Spec.LaunchTemplate, b.ko.Spec.LaunchTemplate)
 	} else if a.ko.Spec.LaunchTemplate != nil && b.ko.Spec.LaunchTemplate != nil {
-		if ackcompare.HasNilDifference(a.ko.Spec.LaunchTemplate.LaunchTemplateID, b.ko.Spec.LaunchTemplate.LaunchTemplateID) {
-			delta.Add("Spec.LaunchTemplate.LaunchTemplateID", a.ko.Spec.LaunchTemplate.LaunchTemplateID, b.ko.Spec.LaunchTemplate.LaunchTemplateID)
-		} else if a.ko.Spec.LaunchTemplate.LaunchTemplateID != nil && b.ko.Spec.LaunchTemplate.LaunchTemplateID != nil {
-			if *a.ko.Spec.LaunchTemplate.LaunchTemplateID != *b.ko.Spec.LaunchTemplate.LaunchTemplateID {
-				delta.Add("Spec.LaunchTemplate.LaunchTemplateID", a.ko.Spec.LaunchTemplate.LaunchTemplateID, b.ko.Spec.LaunchTemplate.LaunchTemplateID)
+		if ackcompare.HasNilDifference(a.ko.Spec.LaunchTemplate.LaunchTemplateName, b.ko.Spec.LaunchTemplate.LaunchTemplateName) {
+			delta.Add("Spec.LaunchTemplate.LaunchTemplateName", a.ko.Spec.LaunchTemplate.LaunchTemplateName, b.ko.Spec.LaunchTemplate.LaunchTemplateName)
+		} else if a.ko.Spec.LaunchTemplate.LaunchTemplateName != nil && b.ko.Spec.LaunchTemplate.LaunchTemplateName != nil {
+			if *a.ko.Spec.LaunchTemplate.LaunchTemplateName != *b.ko.Spec.LaunchTemplate.LaunchTemplateName {
+				delta.Add("Spec.LaunchTemplate.LaunchTemplateName", a.ko.Spec.LaunchTemplate.LaunchTemplateName, b.ko.Spec.LaunchTemplate.LaunchTemplateName)
 			}
 		}
 		if ackcompare.HasNilDifference(a.ko.Spec.LaunchTemplate.Version, b.ko.Spec.LaunchTemplate.Version) {
@@ -314,11 +314,11 @@ func newResourceDelta(
 			if ackcompare.HasNilDifference(a.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification, b.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification) {
 				delta.Add("Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification", a.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification, b.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification)
 			} else if a.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification != nil && b.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification != nil {
-				if ackcompare.HasNilDifference(a.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID, b.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID) {
-					delta.Add("Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID", a.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID, b.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID)
-				} else if a.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID != nil && b.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID != nil {
-					if *a.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID != *b.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID {
-						delta.Add("Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID", a.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID, b.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID)
+				if ackcompare.HasNilDifference(a.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName, b.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName) {
+					delta.Add("Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName", a.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName, b.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName)
+				} else if a.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName != nil && b.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName != nil {
+					if *a.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName != *b.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName {
+						delta.Add("Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName", a.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName, b.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName)
 					}
 				}
 				if ackcompare.HasNilDifference(a.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.Version, b.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.Version) {

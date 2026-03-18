@@ -243,8 +243,8 @@ func (rm *resourceManager) sdkFind(
 		}
 		if elem.LaunchTemplate != nil {
 			f20 := &svcapitypes.LaunchTemplateSpecification{}
-			if elem.LaunchTemplate.LaunchTemplateId != nil {
-				f20.LaunchTemplateID = elem.LaunchTemplate.LaunchTemplateId
+			if elem.LaunchTemplate.LaunchTemplateName != nil {
+				f20.LaunchTemplateName = elem.LaunchTemplate.LaunchTemplateName
 			}
 			if elem.LaunchTemplate.Version != nil {
 				f20.Version = elem.LaunchTemplate.Version
@@ -307,8 +307,8 @@ func (rm *resourceManager) sdkFind(
 				f25f1 := &svcapitypes.LaunchTemplate{}
 				if elem.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification != nil {
 					f25f1f0 := &svcapitypes.LaunchTemplateSpecification{}
-					if elem.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateId != nil {
-						f25f1f0.LaunchTemplateID = elem.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateId
+					if elem.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName != nil {
+						f25f1f0.LaunchTemplateName = elem.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName
 					}
 					if elem.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.Version != nil {
 						f25f1f0.Version = elem.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.Version
@@ -536,8 +536,8 @@ func (rm *resourceManager) sdkFind(
 						}
 						if f25f1f1iter.LaunchTemplateSpecification != nil {
 							f25f1f1elemf3 := &svcapitypes.LaunchTemplateSpecification{}
-							if f25f1f1iter.LaunchTemplateSpecification.LaunchTemplateId != nil {
-								f25f1f1elemf3.LaunchTemplateID = f25f1f1iter.LaunchTemplateSpecification.LaunchTemplateId
+							if f25f1f1iter.LaunchTemplateSpecification.LaunchTemplateName != nil {
+								f25f1f1elemf3.LaunchTemplateName = f25f1f1iter.LaunchTemplateSpecification.LaunchTemplateName
 							}
 							if f25f1f1iter.LaunchTemplateSpecification.Version != nil {
 								f25f1f1elemf3.Version = f25f1f1iter.LaunchTemplateSpecification.Version
@@ -880,8 +880,8 @@ func (rm *resourceManager) newCreateRequestPayload(
 	}
 	if r.ko.Spec.LaunchTemplate != nil {
 		f16 := &svcsdktypes.LaunchTemplateSpecification{}
-		if r.ko.Spec.LaunchTemplate.LaunchTemplateID != nil {
-			f16.LaunchTemplateId = r.ko.Spec.LaunchTemplate.LaunchTemplateID
+		if r.ko.Spec.LaunchTemplate.LaunchTemplateName != nil {
+			f16.LaunchTemplateName = r.ko.Spec.LaunchTemplate.LaunchTemplateName
 		}
 		if r.ko.Spec.LaunchTemplate.Version != nil {
 			f16.Version = r.ko.Spec.LaunchTemplate.Version
@@ -992,8 +992,8 @@ func (rm *resourceManager) newCreateRequestPayload(
 			f22f1 := &svcsdktypes.LaunchTemplate{}
 			if r.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification != nil {
 				f22f1f0 := &svcsdktypes.LaunchTemplateSpecification{}
-				if r.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID != nil {
-					f22f1f0.LaunchTemplateId = r.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID
+				if r.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName != nil {
+					f22f1f0.LaunchTemplateName = r.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName
 				}
 				if r.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.Version != nil {
 					f22f1f0.Version = r.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.Version
@@ -1281,8 +1281,8 @@ func (rm *resourceManager) newCreateRequestPayload(
 					}
 					if f22f1f1iter.LaunchTemplateSpecification != nil {
 						f22f1f1elemf3 := &svcsdktypes.LaunchTemplateSpecification{}
-						if f22f1f1iter.LaunchTemplateSpecification.LaunchTemplateID != nil {
-							f22f1f1elemf3.LaunchTemplateId = f22f1f1iter.LaunchTemplateSpecification.LaunchTemplateID
+						if f22f1f1iter.LaunchTemplateSpecification.LaunchTemplateName != nil {
+							f22f1f1elemf3.LaunchTemplateName = f22f1f1iter.LaunchTemplateSpecification.LaunchTemplateName
 						}
 						if f22f1f1iter.LaunchTemplateSpecification.Version != nil {
 							f22f1f1elemf3.Version = f22f1f1iter.LaunchTemplateSpecification.Version
@@ -1528,8 +1528,8 @@ func (rm *resourceManager) newUpdateRequestPayload(
 	}
 	if r.ko.Spec.LaunchTemplate != nil {
 		f16 := &svcsdktypes.LaunchTemplateSpecification{}
-		if r.ko.Spec.LaunchTemplate.LaunchTemplateID != nil {
-			f16.LaunchTemplateId = r.ko.Spec.LaunchTemplate.LaunchTemplateID
+		if r.ko.Spec.LaunchTemplate.LaunchTemplateName != nil {
+			f16.LaunchTemplateName = r.ko.Spec.LaunchTemplate.LaunchTemplateName
 		}
 		if r.ko.Spec.LaunchTemplate.Version != nil {
 			f16.Version = r.ko.Spec.LaunchTemplate.Version
@@ -1603,8 +1603,8 @@ func (rm *resourceManager) newUpdateRequestPayload(
 			f20f1 := &svcsdktypes.LaunchTemplate{}
 			if r.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification != nil {
 				f20f1f0 := &svcsdktypes.LaunchTemplateSpecification{}
-				if r.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID != nil {
-					f20f1f0.LaunchTemplateId = r.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateID
+				if r.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName != nil {
+					f20f1f0.LaunchTemplateName = r.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName
 				}
 				if r.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.Version != nil {
 					f20f1f0.Version = r.ko.Spec.MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.Version
@@ -1892,8 +1892,8 @@ func (rm *resourceManager) newUpdateRequestPayload(
 					}
 					if f20f1f1iter.LaunchTemplateSpecification != nil {
 						f20f1f1elemf3 := &svcsdktypes.LaunchTemplateSpecification{}
-						if f20f1f1iter.LaunchTemplateSpecification.LaunchTemplateID != nil {
-							f20f1f1elemf3.LaunchTemplateId = f20f1f1iter.LaunchTemplateSpecification.LaunchTemplateID
+						if f20f1f1iter.LaunchTemplateSpecification.LaunchTemplateName != nil {
+							f20f1f1elemf3.LaunchTemplateName = f20f1f1iter.LaunchTemplateSpecification.LaunchTemplateName
 						}
 						if f20f1f1iter.LaunchTemplateSpecification.Version != nil {
 							f20f1f1elemf3.Version = f20f1f1iter.LaunchTemplateSpecification.Version
@@ -2077,7 +2077,9 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 		return false
 	}
 	switch terminalErr.ErrorCode() {
-	case "ValidationError":
+	case "ValidationError",
+		"AlreadyExists",
+		"LimitExceeded":
 		return true
 	default:
 		return false

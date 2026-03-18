@@ -269,7 +269,7 @@ spec:
                   an Auto Scaling group (https://docs.aws.amazon.com/autoscaling/ec2/userguide/create-launch-template.html)
                   in the Amazon EC2 Auto Scaling User Guide.
                 properties:
-                  launchTemplateID:
+                  launchTemplateName:
                     type: string
                   version:
                     type: string
@@ -389,7 +389,7 @@ spec:
                           about launch templates, see Launch templates (https://docs.aws.amazon.com/autoscaling/ec2/userguide/launch-templates.html)
                           in the Amazon EC2 Auto Scaling User Guide.
                         properties:
-                          launchTemplateID:
+                          launchTemplateName:
                             type: string
                           version:
                             type: string
@@ -659,7 +659,7 @@ spec:
                                 about launch templates, see Launch templates (https://docs.aws.amazon.com/autoscaling/ec2/userguide/launch-templates.html)
                                 in the Amazon EC2 Auto Scaling User Guide.
                               properties:
-                                launchTemplateID:
+                                launchTemplateName:
                                   type: string
                                 version:
                                   type: string
